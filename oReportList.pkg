@@ -1,0 +1,29 @@
+Use NextTempPDF.pkg 
+Object oReportList is a cObject 
+    Global_Variable Integer ghReportList 
+    Property Integer[] paReports
+    
+    Procedure AddReport Integer hObj 
+        Integer[] aReports 
+        Get paReports to aReports 
+        Move hObj to aReports[SizeOfArray(aReports)]
+        Set paReports to aReports 
+    End_Procedure
+    
+    Procedure TestAll 
+        Integer[] aReports 
+        tReportFilename FileNamet 
+        Integer iIndex iMax
+        String sName 
+        Get paReports to aReports 
+        Move (SizeOfArray(aReports)-1) to iMax  
+        For iIndex from 0 to iMax
+           Get GenerateReportPDF of aReports[iIndex] "" "" to FileNamet  
+//           Get Name of aReports[iIndex] to sName 
+//           Showln vbtab vbtab sName 
+        Loop
+    End_Procedure
+    
+    Move (Self) to ghReportList
+End_Object
+

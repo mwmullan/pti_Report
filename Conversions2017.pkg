@@ -1,0 +1,180 @@
+Use cDatabaseConverter.pkg
+Use for_all.pkg
+Use cDRReport.pkg
+
+
+Object oConversions2017 is a cObject 
+
+    Object oCreateAutoReport is a cDatabaseConverter
+        Property String psFilename    "AutoReport"
+        Property String psDescription "Automatic Report"
+        Property Integer piFileNum    400
+        
+        Function okToConvert Returns Boolean
+            Handle hFile 
+            Integer iPos 
+            
+            Get StrToFileNumber (psFileName(Self)) to hFile
+            Function_Return (hFile=0)
+        End_Function         
+        
+        Procedure onConvert
+            Integer hFile
+            Integer iNewColumn 
+            Integer iNewIndex
+            
+            Login "DFCONNID=reports" "" "" "MSSQLDRV"
+        	
+        	Move 0 to hFile
+        	Structure_Start hFile "MSSQLDRV"
+        		Set_Attribute DF_FILE_PHYSICAL_NAME  of hFile to (fullFilename(Self, (psFileName(Self)) + ".int" ))
+        		Set_Attribute DF_FILE_LOGIN of hFile to "DFCONNID=reports"
+        		Set_Attribute DF_FILE_TABLE_NAME of hFile to (psFileName(Self))
+                Set_Attribute DF_FILE_RECNUM_TABLE of hFile to False
+                Set_Attribute DF_FILE_USE_DUMMY_ZERO_DATE of hFile to True
+            
+                Get CreateIdentityField hFile "ID" to iNewColumn
+        		Get CreateField hFile DF_ASCII     100   "Description"       to iNewColumn
+        		Get CreateField hFile DF_ASCII     50    "ReportName"        to iNewColumn
+        		Get CreateField hFile DF_ASCII     50    "SortOrder"    to iNewColumn
+        		Get CreateField hFile DF_TEXT      2000  "Filters"    to iNewColumn
+        		Get CreateField hFile DF_TEXT      2000  "Parameters"    to iNewColumn
+        		Get CreateField hFile DF_TEXT      2000  "Functions"    to iNewColumn
+        		
+        		Get CreateField hFile DF_DATETIME  10  "Created_DateTime"  to iNewColumn 
+        		Get CreateField hFile DF_DATETIME  10  "Updated_DateTime"  to iNewColumn 
+        		
+                Get CreateIndex hFile "ID" to iNewIndex
+                Get CreateIndex hFile "Name,Version" to iNewIndex
+            Structure_End hFile
+        	
+        	Send RegisterAndCreateMSSQLFD (piFilenum(Self)) (psFilename(Self)) (psDescription(Self))
+        End_Procedure
+    End_Object  
+
+    Object oTestRun is a cDatabaseConverter
+        Property String psFilename    "TestHead"
+        Property String psDescription "Report Test Header"
+        Property Integer piFileNum    401
+        
+        Function okToConvert Returns Boolean
+            Handle hFile 
+            Integer iPos 
+            
+            Get StrToFileNumber (psFileName(Self)) to hFile
+            Function_Return (hFile=0)
+        End_Function         
+        
+        Procedure onConvert
+            Integer hFile
+            Integer iNewColumn 
+            Integer iNewIndex
+            
+            Login "DFCONNID=FurSystem" "" "" "MSSQLDRV"
+        	
+        	Move 0 to hFile
+        	Structure_Start hFile "MSSQLDRV"
+        		Set_Attribute DF_FILE_PHYSICAL_NAME  of hFile to (fullFilename(Self, (psFileName(Self)) + ".int" ))
+        		Set_Attribute DF_FILE_LOGIN of hFile to "DFCONNID=reports"
+        		Set_Attribute DF_FILE_TABLE_NAME of hFile to (psFileName(Self))
+                Set_Attribute DF_FILE_RECNUM_TABLE of hFile to False
+                Set_Attribute DF_FILE_USE_DUMMY_ZERO_DATE of hFile to True
+            
+                Get CreateIdentityField hFile "ID" to iNewColumn
+        		Get CreateField hFile DF_ASCII     100   "Description"       to iNewColumn
+        		Get CreateField hFile DF_ASCII     1     "CoverSheet"        to iNewColumn
+        		Get CreateField hFile DF_ASCII     1     "ReportSheet"       to iNewColumn
+        		
+        		Get CreateField hFile DF_DATETIME  10  "Created_DateTime"  to iNewColumn 
+        		Get CreateField hFile DF_DATETIME  10  "Updated_DateTime"  to iNewColumn 
+        		
+                Get CreateIndex hFile "ID" to iNewIndex
+                Get CreateIndex hFile "Description,ID" to iNewIndex
+            Structure_End hFile
+        	
+        	Send RegisterAndCreateMSSQLFD (piFilenum(Self)) (psFilename(Self)) (psDescription(Self))
+        End_Procedure
+    End_Object
+
+    Object oTestBody is a cDatabaseConverter
+        Property String psFilename    "TestLine"
+        Property String psDescription "Report Test Line"
+        Property Integer piFileNum    402
+        
+        Function okToConvert Returns Boolean
+            Handle hFile 
+            Integer iPos 
+            
+            Get StrToFileNumber (psFileName(Self)) to hFile
+            Function_Return (hFile=0)
+        End_Function         
+        
+        Procedure onConvert
+            Integer hFile
+            Integer iNewColumn 
+            Integer iNewIndex
+            
+            Login "DFCONNID=reports" "" "" "MSSQLDRV"
+        	
+        	Move 0 to hFile
+        	Structure_Start hFile "MSSQLDRV"
+        		Set_Attribute DF_FILE_PHYSICAL_NAME  of hFile to (fullFilename(Self, (psFileName(Self)) + ".int" ))
+        		Set_Attribute DF_FILE_LOGIN of hFile to "DFCONNID=reports"
+        		Set_Attribute DF_FILE_TABLE_NAME of hFile to (psFileName(Self))
+                Set_Attribute DF_FILE_RECNUM_TABLE of hFile to False
+                Set_Attribute DF_FILE_USE_DUMMY_ZERO_DATE of hFile to True
+            
+                Get CreateIdentityField hFile "ID" to iNewColumn
+                Get CreateSQLField hFile SQL_INTEGER 0 "TestHEAD_ID" to iNewColumn
+                Get CreateSQLField hFile SQL_INTEGER 0 "AutoReport_ID" to iNewColumn
+        		Get CreateField hFile DF_BCD 8 "ItemNo" to iNewColumn
+        		
+        		Get CreateField hFile DF_DATETIME  10  "Created_DateTime"  to iNewColumn 
+        		Get CreateField hFile DF_DATETIME  10  "Updated_DateTime"  to iNewColumn 
+        		
+                Get CreateIndex hFile "ID" to iNewIndex
+                Get CreateIndex hFile "TestHEAD_ID,ItemNo,ID" to iNewIndex
+                Get CreateIndex hFile "TestHEAD_ID,AutoReport_ID" to iNewIndex
+                
+                Send CreateFieldRelate hFile "TestHEAD_ID" "testhead.id"
+                Send CreateFieldRelate hFile "AutoReport_ID" "AUTOREPORT.id"
+            Structure_End hFile
+        	
+        	Send RegisterAndCreateMSSQLFD (piFilenum(Self)) (psFilename(Self)) (psDescription(Self))
+        End_Procedure
+    End_Object
+    
+      Object oInsModify is a cDatabaseConverter
+        Property String psFilename    "tInsPolicyHeaders"
+        Property String psDescription "Insurance Policy Headers"
+        Property Integer piFileNum    79
+        
+        Function okToConvert Returns Boolean
+            Handle hFile 
+            Integer iPos 
+            
+            Get_Attribute DF_FILE_NUMBER_FIELDS hFile
+            Function_Return (hFile=8)
+        End_Function         
+        
+        Procedure onConvert
+            Integer hFile
+            Integer iNewColumn 
+            Integer iNewIndex
+            Login "DFCONNID=FurSystem" "" "" "MSSQLDRV"
+        	
+        	Get piFileNum to hFile
+        	Structure_Start hFile "MSSQLDRV"
+        		  Get CreateField hFile DF_DATETIME  0   "ModifiedAt"      to iNewColumn
+                  Get CreateField hFile DF_ASCII    45   "ModifiedBy"      to iNewColumn
+            Structure_End hFile
+        	
+        	Send RegisterAndCreateMSSQLFD (piFilenum(Self)) (psFilename(Self)) (psDescription(Self))
+        End_Procedure
+    End_Object
+    
+    
+    
+    
+
+End_Object 

@@ -1,0 +1,115 @@
+﻿Use Windows.pkg
+Use cDRReportFionaidh.pkg
+
+// Might need to go to Printers Library 
+Enum_List 
+    Define C_NO_PRINTER
+    Define C_PRINTER_FRONT
+    Define C_PRINTER_BACK 
+    Define C_PRINTER_LABEL 
+    Define C_PRINTER_LABEL_SMALL
+    Define C_PRINTER_LABEL_BACK 
+End_Enum_List
+
+// End Printers. 
+Class cDRReportButton is a Button
+    
+    Procedure Construct_Object
+        Forward Send Construct_Object
+        Property String psBtnReportName_Private "" 
+        Property Handle phoBtnReport 0
+        Property String psKeyFileField ""
+        Property String psKeyValue ""
+        String hoBtnReport  
+        Get Create (RefClass(cDRReportFionaidh)) to hoBtnReport
+        Set phoBtnReport to hoBtnReport
+        Set Label to "Print"    
+    End_Procedure
+
+    Procedure End_Construct_Object
+        Forward Send End_Construct_Object
+    End_Procedure
+    
+    Procedure Set psBtnReportName String sReportName
+        Set psBtnReportName_Private to sReportName 
+        Set psReportName of (phoBtnReport(Self)) to sReportName 
+    End_Procedure
+   
+    { EnumList = "C_NO_PRINTER , C_PRINTER_FRONT, C_PRINTER_BACK,C_PRINTER_LABEL, C_PRINTER_LABEL_SMALL, C_PRINTER_LABEL_BACK"}
+    Procedure Set psPrinter Integer iPrinterEnum 
+        String sPrinter
+        Integer iPrinterSelector 
+        // 1 Get piPRINTER_SELECTED to iPrinterSelector
+        Move iPrinterEnum to iPrinterSelector
+        Case Begin 
+            Case (iPrinterSelector = C_NO_PRINTER)
+                Move "" to sPrinter       
+                Case Break                                                     
+//            Case (iPrinterSelector = C_PRINTER_FRONT)                       
+//                Get psReportPrinterName of ghoApplication to sPrinter         
+//                Case Break                                                    
+//            Case (iPrinterSelector = C_PRINTER_BACK)
+//                Get psBackRoomReportsPN of ghoApplication to sPrinter
+//                Case Break
+//            Case (iPrinterSelector = C_PRINTER_LABEL)
+//                Get psLabelPrinterName of ghoApplication to sPrinter
+//                Case Break
+//            Case (iPrinterSelector = C_PRINTER_LABEL_SMALL)
+//                Get psLabelSmallPrinterName of ghoApplication to sPrinter
+//                Case Break
+//            Case (iPrinterSelector = C_PRINTER_LABEL_BACK)
+//                Get psBackRoomLabelsPN of ghoApplication to sPrinter
+//                Case Break
+        Case End
+       Send UserError 
+        Set psPrinterName of (phoBtnReport(Self))  to sPrinter 
+    End_Function
+
+    Procedure DumpReport Integer piCount 
+        Integer iCount iFilters
+        String sReportID 
+        Move 1 to iCount 
+        Handle hoReport
+        Boolean bFilters
+        String strTest strTest2 strTest3   
+        Get phoBtnReport to hoReport 
+        
+        If (num_arguments > 0) Move piCount to iCount
+        // Open the report 
+        Get OpenReport of hoReport to sReportID 
+        Set psReportId of hoReport to sReportID  
+        Send RemoveAllFilters of hoReport (psReportId(phoBtnReport(Self)))   
+        Send AddFilter of hoReport sReportID (SFormat("{%1}",(psKeyFileField(Self))))  C_drEqual  (psKeyValue(Self))  
+        Set peOutputDestination of hoReport to PRINT_TO_PRINTER
+        Get FiltersDefined of hoReport sReportID  to bFilters 
+        If (bFilters) Begin
+//            Get FilterCount of hoReport sReportID  to iFilters 
+//            While (iFilters > 0)
+//                Get psFilterField      of hoReport  sReportID iFilters to strTest
+//                Get peFilterOperator   of hoReport  sReportID iFilters to strTest2
+//                Get psFilterValue      of hoReport  sReportID iFilters to strTest3
+//                  
+//                Decrement iFilters
+//            Loop
+            
+            
+            
+            
+            
+             
+            Send OutputReport of hoReport
+        End
+        Decrement iCount 
+        While (iCount > 0)
+            Decrement iCount 
+            Send OutputReport of (phoBtnReport(Self))
+        Loop
+    End_Procedure
+    
+    
+    Procedure SetSortFields 
+    End_Procedure
+
+End_Class
+
+  

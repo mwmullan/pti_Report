@@ -1,0 +1,79 @@
+Use cDRReport.pkg
+Use MSSqldrv.pkg
+
+Class cDRReportFionaidh is a cDRReport
+    
+    Procedure Construct_Object
+        Forward Send Construct_Object
+
+    End_Procedure
+    
+    Procedure onExternalInit String sReportID 
+        // Stub method used in cBtnDrReport Class.
+    End_Procedure
+    
+    Procedure OnInitializeReport
+        Forward Send OnInitializeReport
+        String sConnection
+        C_drDatabaseTypes iDBType 
+        String sReportID 
+        Get psReportId to sReportID 
+        Get DatabaseType sReportID to iDBType 
+        If (iDBType = C_drODBC) Begin 
+            Send ChangeODBCDataSource sReportID 
+        End
+        Send onExternalInit sReportID 
+        
+    End_Procedure
+    
+     // Activate the code inside this method if you want to change the database connection
+        Procedure ChangeODBCDataSource String sReportId
+            String sConnectionString sDSN sSubReportId soLogin sMachine
+            Integer iSubReports iSubReport
+            Handle hoSQLConn 
+            Get Create (RefClass(cMSSQLHandler)) to hoSQLConn 
+            Integer iDriver iNumConn iConn iConnOptions
+            String sID sConnString sTest
+            Get psDatabaseConnection sReportId to sConnectionString
+            Get_Attribute DF_FILE_LOGIN of 1 to soLogin
+           
+            If (Left(soLogin,8) = "DFCONNID") Begin 
+
+                Get DriverIndex of hoSQLConn "MSSQLDRV" to iDriver
+                If (iDriver = 0) Begin
+                    Showln "Driver not loaded"
+                    Procedure_Return
+                End
+                Get_Attribute DF_DRIVER_NUMBER_CONNECTION_IDS of iDriver to iNumConn
+                For iConn from 0 to (iNumConn - 1)
+                    Get_Attribute DF_DRIVER_CONNECTION_ID of iDriver iConn to sID
+                    Move (Uppercase(sID)) to sID 
+                    Move (Uppercase(RIGHT(soLogin,(LENGTH(soLogin) - 9)))) to sTest 
+                    If (sTest = sID) Begin 
+                        Get_Attribute DF_DRIVER_CONNECTION_ID_STRING of iDriver iConn to sConnString
+                    End
+                Loop
+                // ToDo: Change the contents of sDSN and/or sConnectionString
+                Get psDatabaseName sReportId to sDSN
+            End // we got this from a connid 
+            Else Begin 
+                // get the connection string for the other stuff
+                Get_Attribute DF_FILE_LOGIN of 1 to sConnString
+            End
+            Get_Environment "COMPUTERNAME" to sMachine
+            Move (SFormat("DRIVER=SQL Server Native Client 11.0;%1;APP=FIONAIDH;WSID=%2",sConnString,sMachine)) to sConnectionString 
+            Set psDatabaseConnection sReportId to sConnectionString
+           //Send Stop_Box sConnectionString "foo " 
+            Get SubReportCount sReportId to iSubReports
+            Decrement iSubReports
+            For iSubReport from 0 to iSubReports
+                Get SubReportId sReportId iSubReport to sSubReportId
+                Send ChangeODBCDataSource sSubReportId
+            Loop
+        End_Procedure
+
+    Procedure End_Construct_Object
+        Forward Send End_Construct_Object
+    End_Procedure
+
+End_Class

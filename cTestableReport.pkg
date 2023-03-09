@@ -1,0 +1,152 @@
+Use cDRReport.pkg
+Use WinUuid.pkg
+Use vWin32fh.pkg
+Use oReportList.pkg 
+Use reportStructs.pkg 
+Use NextTempPdf.pkg 
+Use cDRReportFionaidhBase.pkg
+
+Class cDRReportFionaidh is a cDRReportFionaidhBase
+   
+    Procedure Construct_Object 
+        Forward Send Construct_Object 
+        Property Boolean pbPrintDuplex False 
+        Property Boolean pbNotTesting True
+        Property tParams[] _private_ptParams
+        Send DefineParams  
+    End_Procedure
+    
+    Function ReportParameters Returns tParams[]
+        tParams[] aParams
+        Get _private_ptParams  to aParams 
+        Function_Return aParams 
+    End_Function
+    
+    Procedure DefineParams 
+        // Hook to set "simple" parameter array.
+        tParams[] lptParams 
+        Set ReportParameters to lptParams 
+    End_Procedure
+    
+    Procedure Set ReportParameters tParams[] lptParams 
+        Set _private_ptParams to lptParams 
+    End_Procedure
+    
+    Procedure UpdateParameters String sReportID tReportParameters[] aParams 
+        Integer iPos 
+        Integer iMax 
+        Integer iParameter 
+        
+        Move (SizeOfArray(aParams)) to iMax 
+        For iPos from 0 to (iMax-1) 
+            Get ParameterIdByName sReportID aParams[iPos].sName to iParameter
+            If (iParameter > -1) Begin
+                Set psParameterValue sReportID iParameter to aParams[iPos].sValue
+            End
+        Loop
+    End_Procedure
+    
+    Function FormatFieldName String sField Returns String
+        Move (Trim(sField)) to sField 
+        If ((Pos("}",sField))=0) Move (sField+"}") to sField 
+        If ((Pos("{",sField))=0) Move ("{"+sField) to sField 
+        Function_Return sField         
+    End_Function
+    
+    Function FormatOperator String sOperator Returns Integer 
+        If (sOperator eq "=") Function_Return C_drEqual
+        If (sOperator eq ">") Function_Return C_drGreaterThan
+        If (sOperator eq "<") Function_Return C_drGreaterThanOrEqual
+        If (sOperator eq ">=") Function_Return C_drLessThan
+        If (sOperator eq "<=") Function_Return C_drLessThanOrEqual
+        Function_Return C_drEqual
+    End_Function
+    
+    Procedure UpdateFilters String sReportID tReportFilter[] aFilter 
+        Integer iPos 
+        Integer iMax 
+
+        Send RemoveAllFilters sReportId
+        Move (SizeOfArray(aFilter)) to iMax 
+        For iPos from 0 to (iMax-1) 
+            Send AddFilter sReportID (FormatFieldName(Self,aFilter[iPos].sField)) (FormatOperator(Self,aFilter[iPos].sOperator)) aFilter[iPos].sValue
+        Loop
+    End_Procedure
+    
+    Procedure UpdateFunction String sReportID tReportFunctions[] aFunction 
+        Integer iFunctionID
+        Integer iMax 
+        Integer iPos 
+        
+        Move (SizeOfArray(aFunction)) to iMax 
+        For iPos from 0 to (iMax-1) 
+            Get FunctionIdByName sReportID aFunction[iPos].sName to iFunctionID
+            If (iFunctionID<>-1) Set psFunction sReportId aFunction[iPos].sName to aFunction[iPos].sFunction
+        Loop
+    End_Procedure
+    
+    Procedure UpdateSortOrder String sReportID tReportSort[] aSortOrder
+        Integer iMax 
+        Integer iPos 
+        
+        If ((SizeOfArray(aSortOrder)) = 0) Procedure_Return
+        
+        
+        Send RemoveAllRecordSortFields sReportID
+        Move (SizeOfArray(aSortOrder)) to iMax 
+        For iPos from 0 to (iMax-1) 
+            Send AddRecordSortField sReportId (sformat("{%1}",aSortOrder[iPos].sField)) aSortOrder[iPos].iDirection
+        Loop
+    End_Procedure
+    
+    Function GenerateReportPDF String sFilename Returns tReportFilename
+        tParams[] aParams 
+        tReportFilename OutputFile
+        String sReportId
+        String sReport 
+        Integer iPos 
+        Integer iMax 
+        Get psReportName to sReport
+        If (sReport = "") Begin 
+            Showln (Name(Self)) 
+            Function_Return  "Fail"  
+        End
+        // Test if report data source is RDS. 
+        // if so, need to call generate data function, with params. 
+                
+        If (sFilename = "") Get ExportFileName of oNextTempPDF to OutputFile
+        Else Begin 
+            Get ParseFolderName sFilename to OutputFile.sFolder
+            Get ParseFileName sFilename to OutputFile.sFile
+            Move sFilename to OutputFile.sFullName
+        End
+        Set pbNotTesting to False 
+        Get OpenReport to sReportId
+        Get ReportParameters to aParams 
+        Move (SizeOfArray(aParams)-1) to iMax 
+        For iPos from 0 to iMax 
+            Send UpdateParameters aParams[iPos].sReportID  aParams[iPos].aParameters
+            Send UpdateFilters aParams[iPos].sReportID     aParams[iPos].aFilters
+            Send UpdateFunction aParams[iPos].sReportID    aParams[iPos].aFunction
+            Send UpdateSortOrder aParams[iPos].sReportID   aParams[iPos].aSortOrder
+        Loop
+
+        Send ExportReport C_drPDF OutputFile.sFullName
+        Set pbNotTesting to true
+        If (vFilePathExists(OutputFile.sFullName)) Function_Return OutputFile
+    End_Function
+    
+    Procedure DumpToJson String sTable Variant[][] theTable 
+         
+        UChar[] uCharData
+        Direct_Output channel 3 (SFormat("c:\temp\%1.JSON",sTable)) 
+            Get ConvertTableDataToJsonSampleData theTable to UcharData 
+            Writeln channel 3 (UCharArrayToString(uCharData))
+        Close_Output channel 3 
+    End_Procedure
+    
+    Procedure End_Construct_Object
+        Send AddReport to ghReportList (Self)
+        Forward Send End_Construct_Object
+    End_Procedure
+End_Class

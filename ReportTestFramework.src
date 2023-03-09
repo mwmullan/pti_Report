@@ -1,0 +1,38 @@
+Use DfAllEnt.pkg
+Use Windows.pkg
+
+Object oHtmlHelp is a cHtmlHelp
+End_Object
+
+Object oApplication is a cApplication
+
+    Object oConnection is a cConnection
+        Use LoginEncryption.pkg
+        Use DatabaseLoginDialog.dg
+    End_Object
+
+End_Object
+
+Use VendorReport.pkg
+
+Object oTestFramework is a dbModalPanel
+    Set Location to 7 11
+    Set Size to 125 269
+    Set Label to "reporting test"
+    
+    
+
+    Object oButton1 is a Button
+        Set Size to 14 103
+        Set Location to 12 10
+        Set Label to 'Generate Report Files'
+    
+        // fires when the button is clicked
+        Procedure OnClick
+            Send TestAll to ghReportList
+        End_Procedure
+    
+    End_Object
+End_Object
+
+Start_UI oTestFramework

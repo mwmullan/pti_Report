@@ -1,0 +1,34 @@
+Struct tReportSort
+    String sField 
+    Integer iDirection
+End_Struct
+
+Struct tExportOptions
+    String sFileStart 
+End_Struct
+
+Struct tReportFilter
+    String sField 
+    String sOperator
+    String sValue 
+End_Struct
+
+Struct tReportFunctions
+    String sName
+    String sFunction
+End_Struct
+
+Struct tReportParameters
+    String sName 
+    String sValue 
+End_Struct
+
+Struct tParams  
+    String              sReportID 
+    tReportSort[]       aSortOrder
+    tExportOptions      ReportOptions
+    tReportFilter[]     aFilters
+    tReportFunctions[]  aFilterFunction
+    tReportFunctions[]  aFunction
+    tReportParameters[] aParameters
+End_Struct
