@@ -4,3 +4,10 @@ Version=23.0
 ConfigFile=D:\DataFlex Projects\PTI_Report\.\Config.ws
 [Preferences]
 DefaultFormHeight=12
+[Conditionals]
+Is$WebApp=False
+Is$Win64=True
+[Libraries]
+Lib1=..\..\BuildSystem\Repositories\Libraries\DR8\23\DataFlex Reports.sws
+[Projects]
+Project0=AutoReports.src

@@ -1,6 +1,13 @@
 <?xml version="1.0"?>
 <classList xmlns="http://www.dataaccess.com/VisualDataFlex/2006/classlist/">
-	<VDFLibraryTimeStamp>2023-02-14T05:30:01</VDFLibraryTimeStamp><libraries></libraries>
+	<VDFLibraryTimeStamp>2023-02-14T05:30:01</VDFLibraryTimeStamp>
+	<libraries>
+		<library>
+			<libraryPath>..\..\BuildSystem\Repositories\Libraries\DR8\23\DataFlex Reports.sws</libraryPath>
+			<libraryTimeStamp>2022-06-15T22:24:28</libraryTimeStamp>
+			<libraryID>Lib1</libraryID>
+		</library>
+	</libraries>
 	<classes>
 		<class>
 			<className>cWebButton</className>
@@ -1107,6 +1114,172 @@
 			<package>cCJCommandBarSystem.pkg</package>
 			<groupName>Menus and Toolbars</groupName>
 			<libraryID>0</libraryID>
+		</class>
+		<class>
+			<className>cDRReport</className>
+			<image>ControlCOM.ico</image>
+			<package>cDRReport.pkg</package>
+			<groupName>DataFlex Reports</groupName>
+			<libraryID>Lib1</libraryID>
+		</class>
+		<class>
+			<className>cDRPreview</className>
+			<image>ControlView.ico</image>
+			<package>cDRPreview.pkg</package>
+			<groupName>DataFlex Reports</groupName>
+			<libraryID>Lib1</libraryID>
+		</class>
+		<class>
+			<className>cDRPreviewWindow</className>
+			<image>ControlObject.ico</image>
+			<package>cDRPreviewWindow.pkg</package>
+			<groupName>DataFlex Reports</groupName>
+			<libraryID>Lib1</libraryID>
+		</class>
+		<class>
+			<className>cDRToolPanelPreview</className>
+			<image>ControlToolPanel.ico</image>
+			<package>cDRToolPanelPreview.pkg</package>
+			<groupName>DataFlex Reports</groupName>
+			<libraryID>Lib1</libraryID>
+		</class>
+		<class>
+			<className>cWebDRReportViewer</className>
+			<image>cWebHtmlBox.ico</image>
+			<package>cWebDRReportViewer.pkg</package>
+			<groupName>DataFlex Reports</groupName>
+			<libraryID>Lib1</libraryID>
+		</class>
+		<class>
+			<className>cDRWebSortColumnsGrid</className>
+			<image>cWebGrid.ico</image>
+			<package>cDRWebSortColumnsGrid.pkg</package>
+			<groupName>DataFlex Reports</groupName>
+			<libraryID>Lib1</libraryID>
+		</class>
+		<class>
+			<className>cDRWebSortDirectionColumn</className>
+			<image>cWebColumnCombo.ico</image>
+			<package>cDRWebSortDirectionColumn.Pkg</package>
+			<groupName>DataFlex Reports</groupName>
+			<libraryID>Lib1</libraryID>
+		</class>
+		<class>
+			<className>cCJSortColumnsGrid</className>
+			<image>ControlGrid.ico</image>
+			<package>cCJSortColumnsGrid.pkg</package>
+			<groupName>DataFlex Reports</groupName>
+			<libraryID>Lib1</libraryID>
+		</class>
+		<class>
+			<className>cDRSortDirectionsGridColumn</className>
+			<image>ControlGridColumn.ico</image>
+			<package>cDRSortDirectionsGridColumn.pkg</package>
+			<groupName>DataFlex Reports</groupName>
+			<libraryID>Lib1</libraryID>
+		</class>
+		<class>
+			<className>cDRCommandBarSystem</className>
+			<image>ControlCOM.ico</image>
+			<package>cDRCommandBarSystem.pkg</package>
+			<groupName>DataFlex Reports</groupName>
+			<libraryID>Lib1</libraryID>
+		</class>
+		<class>
+			<className>cDRPreviewCommandBarSystem</className>
+			<image>ControlCOM.ico</image>
+			<package>cDRPreviewCommandBarSystem.pkg</package>
+			<groupName>DataFlex Reports</groupName>
+			<libraryID>Lib1</libraryID>
+		</class>
+		<class>
+			<className>cDRCurrentPageMenuItem</className>
+			<image>ControlObject.ico</image>
+			<package>cDRCurrentPageMenuItem.pkg</package>
+			<groupName>DataFlex Reports</groupName>
+			<libraryID>Lib1</libraryID>
+		</class>
+		<class>
+			<className>cDRPreviousPageMenuItem</className>
+			<image>ControlObject.ico</image>
+			<package>cDRPreviousPageMenuItem.pkg</package>
+			<groupName>DataFlex Reports</groupName>
+			<libraryID>Lib1</libraryID>
+		</class>
+		<class>
+			<className>cDRFirstPageMenuItem</className>
+			<image>ControlObject.ico</image>
+			<package>cDRFirstPageMenuItem.pkg</package>
+			<groupName>DataFlex Reports</groupName>
+			<libraryID>Lib1</libraryID>
+		</class>
+		<class>
+			<className>cDRExportMenuItem</className>
+			<image>ControlObject.ico</image>
+			<package>cDRExportMenuItem.pkg</package>
+			<groupName>DataFlex Reports</groupName>
+			<libraryID>Lib1</libraryID>
+		</class>
+		<class>
+			<className>cDRLastPageMenuItem</className>
+			<image>ControlObject.ico</image>
+			<package>cDRLastPageMenuItem.pkg</package>
+			<groupName>DataFlex Reports</groupName>
+			<libraryID>Lib1</libraryID>
+		</class>
+		<class>
+			<className>cDRNextPageMenuItem</className>
+			<image>ControlObject.ico</image>
+			<package>cDRNextPageMenuItem.pkg</package>
+			<groupName>DataFlex Reports</groupName>
+			<libraryID>Lib1</libraryID>
+		</class>
+		<class>
+			<className>cDRPrintMenuItem</className>
+			<image>ControlObject.ico</image>
+			<package>cDRPrintMenuItem.pkg</package>
+			<groupName>DataFlex Reports</groupName>
+			<libraryID>Lib1</libraryID>
+		</class>
+		<class>
+			<className>cDRRefreshMenuItem</className>
+			<image>ControlObject.ico</image>
+			<package>cDRRefreshMenuItem.pkg</package>
+			<groupName>DataFlex Reports</groupName>
+			<libraryID>Lib1</libraryID>
+		</class>
+		<class>
+			<className>cDRExportOptionsGroup</className>
+			<image>ControlGroup.ico</image>
+			<package>cDRExportOptionsGroup.pkg</package>
+			<groupName>DataFlex Reports</groupName>
+			<libraryID>Lib1</libraryID>
+		</class>
+		<class>
+			<className>cDRZoomMenuItem</className>
+			<image>ControlObject.ico</image>
+			<package>cDRZoomMenuItem.pkg</package>
+			<groupName>DataFlex Reports</groupName>
+			<libraryID>Lib1</libraryID>
+		</class>
+		<class>
+			<className>cDRGroupTree</className>
+			<image>ControlTreeview.ico</image>
+			<package>cDRGroupTree.pkg</package>
+			<groupName>DataFlex Reports</groupName>
+			<libraryID>Lib1</libraryID>
+		</class>
+		<class>
+			<className>cDRReportFionaidh</className>
+			<image>ControlCOM.ico</image>
+			<package>cDRReportFionaidh.pkg</package>
+			<groupName>PTI</groupName><libraryID></libraryID>
+		</class>
+		<class>
+			<className>cDRReportButton</className>
+			<image>ControlButton.ico</image>
+			<package>cDRReportButton.pkg</package>
+			<groupName>PTI</groupName><libraryID></libraryID>
 		</class>
 	</classes>
 </classList>

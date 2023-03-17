@@ -1,0 +1,19 @@
+[Workspace]
+CurrentProject=AutoReports.src
+Location=d:\libraries\pti_report\m.mullan_Studio.dsk
+CreateNew=-1
+[TabWindows]
+GroupCount=1
+HorizontalGroups=1
+[TabGroup0]
+GroupSize=40
+SelectedTab=0
+[Window0]
+Filename=Workspace Dashboard
+ViewType=101
+Top=47
+Left=0
+Bottom=47
+Right=6
+TabIndex=0
+TabGroup=0

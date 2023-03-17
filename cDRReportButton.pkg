@@ -1,4 +1,5 @@
 ﻿Use Windows.pkg
+Use ReportStructs.pkg
 Use cDRReportFionaidh.pkg
 
 // Might need to go to Printers Library 
@@ -16,10 +17,16 @@ Class cDRReportButton is a Button
     
     Procedure Construct_Object
         Forward Send Construct_Object
+        {Visibility=Private}
         Property String psBtnReportName_Private "" 
+        {Visibility=Private}
         Property Handle phoBtnReport 0
         Property String psKeyFileField ""
+        {Visibility=Private}
         Property String psKeyValue ""
+        {Visibility=Private}
+        Property tParams ptReportParams 
+        
         String hoBtnReport  
         Get Create (RefClass(cDRReportFionaidh)) to hoBtnReport
         Set phoBtnReport to hoBtnReport
@@ -33,6 +40,44 @@ Class cDRReportButton is a Button
     Procedure Set psBtnReportName String sReportName
         Set psBtnReportName_Private to sReportName 
         Set psReportName of (phoBtnReport(Self)) to sReportName 
+    End_Procedure
+    
+    Procedure AddParameter String sParamName String  sParamValue
+        tParams ThisReportConfig
+        tReportParameters[] rptParams 
+        Boolean bAdd
+        Integer iStep iParam
+        Move True to bAdd // if it's a new parameter add it by default.
+        Get ptReportParams to ThisReportConfig
+        Move ThisReportConfig.aParameters to rptParams
+        For istep from 0 to (SizeofArray(rptParams) -1) 
+            If (trim(lowercase(rptParams[iStep].sName)) = (trim(Lowercase(sParamName)))) Begin 
+                Move sParamValue to  rptParams[iStep].sValue
+                Move False to bAdd      
+            End    
+        Loop
+        If (bAdd) Begin 
+            Move (SizeOfArray(rptParams)) to iStep 
+            Move sParamValue to  rptParams[iStep].sValue
+            Move sParamName  to  rptParams[iStep].sName
+        End
+        Move rptParams to ThisReportConfig.aParameters
+        Set ptReportParams to ThisReportConfig 
+    End_Procedure
+    
+    Procedure UpdateParameters Handle hoReportID String sReportID
+        tParams ThisReportConfig
+        tReportParameters[] rptParams 
+        Integer iStep iParameter
+        
+        Get ptReportParams to ThisReportConfig
+        Move ThisReportConfig.aParameters to rptParams
+        For istep from 0 to (SizeofArray(rptParams) -1) 
+            Get ParameterIdByName of horeportID sreportID rptParams[iStep].sName to iParameter 
+            If (iParameter <>-1) Begin 
+                 Set psParameterValue of horeportID sReportId iParameter to  rptParams[iStep].sValue  
+            End
+        Loop
     End_Procedure
    
     { EnumList = "C_NO_PRINTER , C_PRINTER_FRONT, C_PRINTER_BACK,C_PRINTER_LABEL, C_PRINTER_LABEL_SMALL, C_PRINTER_LABEL_BACK"}
@@ -62,7 +107,7 @@ Class cDRReportButton is a Button
 //                Case Break
         Case End
        Send UserError 
-        Set psPrinterName of (phoBtnReport(Self))  to sPrinter 
+       Set psPrinterName of (phoBtnReport(Self))  to sPrinter 
     End_Function
 
     Procedure DumpReport Integer piCount 
@@ -78,7 +123,8 @@ Class cDRReportButton is a Button
         // Open the report 
         Get OpenReport of hoReport to sReportID 
         Set psReportId of hoReport to sReportID  
-        Send RemoveAllFilters of hoReport (psReportId(phoBtnReport(Self)))   
+        Send RemoveAllFilters of hoReport (psReportId(phoBtnReport(Self))) 
+        Send UpdateParameters hoReport sReportID
         Send AddFilter of hoReport sReportID (SFormat("{%1}",(psKeyFileField(Self))))  C_drEqual  (psKeyValue(Self))  
         Set peOutputDestination of hoReport to PRINT_TO_PRINTER
         Get FiltersDefined of hoReport sReportID  to bFilters 

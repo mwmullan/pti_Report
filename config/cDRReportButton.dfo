@@ -1,0 +1,13 @@
+Object
+
+    Set psKeyFileField to ENTER_FILE_FIELD
+    Set psBtnReportName to ENTER_REPORT_NAME
+    
+    Procedure onClick 
+        // Add parameters here using 
+        //  Send AddParameter "CodeMastPath" sCodeMastPath
+            
+        Send DumpReport 1 
+    End_Procedure
+
+End_Object

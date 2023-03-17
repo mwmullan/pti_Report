@@ -1,4 +1,4 @@
-Use DFAllEnt.pkg
+﻿Use DFAllEnt.pkg
 Use cCJStandardCommandBarSystem.pkg
 
 Object oHtmlHelp is a cHtmlHelp
@@ -23,8 +23,8 @@ Use oDEOEditContextMenu17.pkg
 
 Object oMain is a Panel
     Set Label To "My Project"
-    Set Location to 1 2
-    Set Size to 300 450
+    Set Location to 4 36
+    Set Size to 245 450
 
     Object oCommandBarSystem is a cCJCommandBarSystem
         Set pbTimerUpdate to True
